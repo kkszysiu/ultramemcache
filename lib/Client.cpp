@@ -551,7 +551,7 @@ bool Client::extractErrorFromReader(void)
     }
     else
     {
-      errorString = "malformed error received";
+      errorString = (char *)"malformed error received";
     }
 
     setError(errorString);
