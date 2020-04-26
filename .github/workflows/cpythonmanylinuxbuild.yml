@@ -5,10 +5,10 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [2.7]
+        python-version: [3.7]
         plat: ['manylinux2010_x86_64', 'manylinux2010_i686', 'manylinux2014_x86_64', 'manylinux2014_i686']
         include:
           - plat: manylinux2010_i686
@@ -29,25 +29,21 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install wheel
-        run: |
-          python -m pip install setuptools==44.1.0 wheel==0.34.2
-      - name: Install GCC
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update && sudo apt-get install -y gcc-4.8
-          ls -lath /usr/bin/gcc*
-          gcc --version
+      - name: Build manylinux Python wheels
+        uses: RalfG/python-wheels-manylinux-build@v0.2.2-${{ matrix.plat }}
+        with:
+          python-versions: 'cp27-cp27m'
+          build-requirements: 'cython numpy'
+          system-packages: 'lrzip-devel zlib-devel'
+          package-path: ''
+          pip-wheel-args: '--no-deps'
       - name: List
         if: runner.os == 'Linux'
         run: |
-          ls -lath
-      - name: Build
-        run: |
-          CC="gcc-4.8" CXX="g++-4.8" python setup.py bdist_wheel
+          ls -lath ./wheelhouse/
       - uses: actions/upload-artifact@v1
         with:
           name: wheels-${{ matrix.python-version }}-${{ matrix.plat }}
-          path: ./dist/
+          path: ./wheelhouse/
 
 
