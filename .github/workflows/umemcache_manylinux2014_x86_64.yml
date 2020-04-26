@@ -1,0 +1,35 @@
+name: CPython 2.7 UMemcache Manylinux 2010 x86_64
+# Ugly mix of https://github.com/htm-community/htm.core/blob/master/.github/workflows/build.yml and https://github.com/pypa/python-manylinux-demo
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build manylinux Python wheels
+        uses: RalfG/python-wheels-manylinux-build@v0.2.2-manylinux2014_x86_64
+        with:
+          python-versions: 'cp27-cp27m'
+          build-requirements: 'cython numpy'
+          system-packages: 'lrzip-devel zlib-devel'
+          package-path: ''
+          pip-wheel-args: '--no-deps'
+      - name: List
+        if: runner.os == 'Linux'
+        run: |
+          ls -lath ./wheelhouse/
+      - uses: actions/upload-artifact@v1
+        with:
+          name: wheels-${{ matrix.plat }}
+          path: ./wheelhouse/
+
+
