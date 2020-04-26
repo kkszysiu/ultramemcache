@@ -35,6 +35,6 @@ jobs:
       - name: Install GCC
         if: runner.os == 'Linux'
         run: |
-          apt-get install gcc -f -y
+          sudo apt-get install gcc -f -y
 
 
