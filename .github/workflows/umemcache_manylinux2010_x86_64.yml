@@ -1,4 +1,4 @@
-name: CPython 2.7 UMemcache Manylinux 2010 & 2014 i686 & x86_64
+name: CPython 2.7 UMemcache Manylinux 2010 x86_64
 # Ugly mix of https://github.com/htm-community/htm.core/blob/master/.github/workflows/build.yml and https://github.com/pypa/python-manylinux-demo
 
 on: [push, pull_request]
