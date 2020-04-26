@@ -18,7 +18,7 @@ jobs:
       - name: Build manylinux Python wheels
         uses: RalfG/python-wheels-manylinux-build@v0.2.2-manylinux2010_x86_64
         with:
-          python-versions: 'cp27-cp27m'
+          python-versions: 'cp27-cp27m cp27-cp27mu'
           build-requirements: 'cython numpy'
           system-packages: 'lrzip-devel zlib-devel'
           package-path: ''
