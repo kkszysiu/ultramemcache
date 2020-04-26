@@ -36,5 +36,11 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get install gcc -f -y
-
+      - name: List
+        if: runner.os == 'Linux'
+        run: |
+          ls -lath
+      - name: Build
+        run: |
+          python setup.py bdist_wheel
 
