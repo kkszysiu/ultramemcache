@@ -1,0 +1,44 @@
+name: CPython 2.7 UMemcache Manylinux 2010 & 2014 i686 & x86_64
+# Ugly mix of https://github.com/htm-community/htm.core/blob/master/.github/workflows/build.yml and https://github.com/pypa/python-manylinux-demo
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [2.7]
+        plat: ['manylinux2010_x86_64', 'manylinux2010_i686', 'manylinux2014_x86_64', 'manylinux2014_i686']
+        include:
+          - plat: manylinux2010_i686
+            docker_image: 'quay.io/pypa/manylinux2010_i686:latest'
+            pre_cmd: linux32
+          - plat: manylinux2010_x86_64
+            docker_image: 'quay.io/pypa/manylinux2010_x86_64:latest'
+            pre_cmd:
+          - plat: manylinux2014_x86_64
+            docker_image: 'quay.io/pypa/manylinux2014_x86_64:latest'
+            pre_cmd:
+          - plat: manylinux2014_i686
+            docker_image: 'quay.io/pypa/manylinux2014_i686:latest'
+            pre_cmd: linux32
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+    - name: Install wheel
+      run: |
+        python -m pip install setuptools==44.1.0 wheel==0.34.2
+    - name: Install GCC
+      if: startsWith(matrix.os, 'linux')
+      run: |
+        apt-get install gcc -f -y
+    - uses: actions/upload-artifact@v1
+      with:
+        name: wheels
+        path: ./build/
+
+
