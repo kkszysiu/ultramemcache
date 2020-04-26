@@ -36,6 +36,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update && sudo apt-get install -y gcc
+          gcc --version
       - name: List
         if: runner.os == 'Linux'
         run: |
